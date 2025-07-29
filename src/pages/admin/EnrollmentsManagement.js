@@ -88,7 +88,7 @@ const EnrollmentsManagement = () => {
       setLoading(false);
     } catch (error) {
       console.error('Error fetching enrollments:', error);
-      setError('فشل في تحميل التسجيلات');
+      console.error('فشل في تحميل التسجيلات');
       setLoading(false);
       
       if (error.response?.status === 401) {
