@@ -49,7 +49,9 @@ const EditCourse = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      await fetchCourseData();
+      if (fetchCourseData) {
+        await fetchCourseData();
+      }
     };
     loadData();
   }, [id, fetchCourseData]);

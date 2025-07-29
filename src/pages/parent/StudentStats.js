@@ -47,7 +47,9 @@ const StudentStats = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      await fetchStudentData();
+      if (fetchStudentData) {
+        await fetchStudentData();
+      }
     };
     loadData();
   }, [fetchStudentData]);

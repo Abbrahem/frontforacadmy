@@ -22,7 +22,7 @@ const Register = () => {
   const [studentVerification, setStudentVerification] = useState(null);
   const [step, setStep] = useState(1);
   const [role, setRole] = useState('');
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   // const [error, setError] = useState('');
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -652,10 +652,10 @@ const Register = () => {
               <div>
                 <button
                   type="submit"
-                  disabled={loading || (role === 'parent' && !studentVerification)}
+                  disabled={false || (role === 'parent' && !studentVerification)}
                   className="w-full btn-primary text-lg py-3 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? (
+                  {false ? (
                     <div className="flex items-center justify-center">
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                       Creating account...

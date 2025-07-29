@@ -18,12 +18,15 @@ const TeacherDashboard = () => {
   const [enrolledStudents, setEnrolledStudents] = useState([]);
 
   useEffect(() => {
-    if (user?.isApproved) {
-      fetchMyCourses();
-      fetchEnrolledStudents();
-    } else {
-      setLoading(false);
-    }
+    const loadData = async () => {
+      if (user?.isApproved) {
+        await fetchMyCourses();
+        await fetchEnrolledStudents();
+      } else {
+        setLoading(false);
+      }
+    };
+    loadData();
   }, [user, fetchMyCourses]);
 
   const fetchMyCourses = useCallback(async () => {
