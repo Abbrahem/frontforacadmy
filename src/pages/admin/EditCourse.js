@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -53,12 +53,7 @@ const EditCourse = () => {
     price: 0
   });
 
-  useEffect(() => {
-    fetchCourseData();
-    fetchTeachers();
-  }, [id]);
-
-  const fetchCourseData = async () => {
+  const fetchCourseData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -92,9 +87,9 @@ const EditCourse = () => {
         navigate('/admin');
       }
     }
-  };
+  }, [id, navigate]);
 
-  const fetchTeachers = async () => {
+  const fetchTeachers = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get('/api/admin/teachers', {
@@ -104,7 +99,15 @@ const EditCourse = () => {
     } catch (error) {
       console.error('Error fetching teachers:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const loadData = async () => {
+      await fetchCourseData();
+      await fetchTeachers();
+    };
+    loadData();
+  }, [id, fetchCourseData, fetchTeachers]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;

@@ -45,15 +45,6 @@ const StudentStats = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const loadData = async () => {
-      if (fetchStudentData) {
-        await fetchStudentData();
-      }
-    };
-    loadData();
-  }, [fetchStudentData]);
-
   const fetchStudentData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
@@ -100,6 +91,15 @@ const StudentStats = () => {
       }
     }
   }, [navigate]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (fetchStudentData) {
+        await fetchStudentData();
+      }
+    };
+    loadData();
+  }, [fetchStudentData]);
 
   const filteredEnrollments = enrollments.filter(enrollment =>
     enrollment.course?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -168,12 +168,12 @@ const StudentStats = () => {
         {/* Student Info Card */}
         <Paper elevation={3} sx={{ p: 4, mb: 4, borderRadius: 3, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
           <Grid container spacing={3} alignItems="center">
-            <Grid item>
+            <Grid>
               <Avatar sx={{ width: 80, height: 80, bgcolor: 'rgba(255,255,255,0.2)' }}>
                 <PersonIcon sx={{ fontSize: 40 }} />
               </Avatar>
             </Grid>
-            <Grid item xs>
+            <Grid xs>
               <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>
                 {student.name}
               </Typography>
@@ -189,7 +189,7 @@ const StudentStats = () => {
                 }}
               />
             </Grid>
-            <Grid item>
+            <Grid>
               <Chip 
                 label="طالب"
                 sx={{ 
@@ -204,7 +204,7 @@ const StudentStats = () => {
 
         {/* Statistics Cards */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid xs={12} sm={6} md={3}>
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -226,7 +226,7 @@ const StudentStats = () => {
             </motion.div>
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid xs={12} sm={6} md={3}>
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -248,7 +248,7 @@ const StudentStats = () => {
             </motion.div>
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid xs={12} sm={6} md={3}>
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -270,7 +270,7 @@ const StudentStats = () => {
             </motion.div>
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid xs={12} sm={6} md={3}>
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}

@@ -46,27 +46,6 @@ const QuizPage = () => {
   const [results, setResults] = useState(null);
   const [timeLeft, setTimeLeft] = useState(null);
 
-  useEffect(() => {
-    const loadQuiz = async () => {
-      await fetchQuiz();
-    };
-    loadQuiz();
-  }, [id, fetchQuiz]);
-
-  useEffect(() => {
-    if (timeLeft !== null && timeLeft > 0) {
-      const timer = setTimeout(() => {
-        setTimeLeft(timeLeft - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else if (timeLeft === 0) {
-      const submitQuiz = async () => {
-        await handleSubmit();
-      };
-      submitQuiz();
-    }
-  }, [timeLeft, handleSubmit]);
-
   const fetchQuiz = useCallback(async () => {
     try {
       const response = await axios.get(`/api/quizzes/${id}`);
@@ -92,25 +71,6 @@ const QuizPage = () => {
       setLoading(false);
     }
   }, [id]);
-
-  const handleAnswerSelect = (questionId, answerIndex) => {
-    setSelectedAnswers(prev => ({
-      ...prev,
-      [questionId]: answerIndex
-    }));
-  };
-
-  const handleNext = () => {
-    if (currentQuestionIndex < quiz.questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
-  };
 
   const handleSubmit = useCallback(async () => {
     if (Object.keys(selectedAnswers).length < quiz.questions.length) {
@@ -146,6 +106,50 @@ const QuizPage = () => {
       setSubmitting(false);
     }
   }, [id, selectedAnswers, quiz, timeLeft]);
+
+  useEffect(() => {
+    const loadQuiz = async () => {
+      if (fetchQuiz) {
+        await fetchQuiz();
+      }
+    };
+    loadQuiz();
+  }, [id, fetchQuiz]);
+
+  useEffect(() => {
+    if (timeLeft !== null && timeLeft > 0) {
+      const timer = setTimeout(() => {
+        setTimeLeft(timeLeft - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (timeLeft === 0) {
+      const submitQuiz = async () => {
+        if (handleSubmit) {
+          await handleSubmit();
+        }
+      };
+      submitQuiz();
+    }
+  }, [timeLeft, handleSubmit]);
+
+  const handleAnswerSelect = (questionId, answerIndex) => {
+    setSelectedAnswers(prev => ({
+      ...prev,
+      [questionId]: answerIndex
+    }));
+  };
+
+  const handleNext = () => {
+    if (currentQuestionIndex < quiz.questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);

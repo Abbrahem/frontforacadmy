@@ -30,7 +30,11 @@ import {
   // Alert,
   Card,
   CardContent,
-  Grid
+  Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from '@mui/material';
 import { 
   Search as SearchIcon,
@@ -41,7 +45,9 @@ import {
   Assignment as AssignmentIcon,
   Visibility as ViewIcon,
   Delete as DeleteIcon,
-  Refresh as RefreshIcon
+  Refresh as RefreshIcon,
+  Clear as ClearIcon,
+  CheckCircle as CheckCircleIcon
 } from '@mui/icons-material';
 
 const EnrollmentsManagement = () => {
@@ -56,14 +62,6 @@ const EnrollmentsManagement = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [stats, setStats] = useState(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const loadData = async () => {
-      await fetchEnrollments();
-      await fetchStats();
-    };
-    loadData();
-  }, [page, rowsPerPage, searchTerm, filterStatus, fetchEnrollments, fetchStats]);
 
   const fetchEnrollments = useCallback(async () => {
     try {
@@ -108,6 +106,18 @@ const EnrollmentsManagement = () => {
       console.error('Error fetching stats:', error);
     }
   }, []);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (fetchEnrollments) {
+        await fetchEnrollments();
+      }
+      if (fetchStats) {
+        await fetchStats();
+      }
+    };
+    loadData();
+  }, [page, rowsPerPage, searchTerm, filterStatus, fetchEnrollments, fetchStats]);
 
   const handleDeleteEnrollment = async (enrollmentId) => {
     if (!window.confirm('هل أنت متأكد من حذف هذا التسجيل؟')) {
@@ -183,7 +193,7 @@ const EnrollmentsManagement = () => {
         {/* Statistics Cards */}
         {stats && (
           <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid xs={12} sm={6} md={3}>
               <Card elevation={3}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Avatar sx={{ bgcolor: 'primary.main', mx: 'auto', mb: 2 }}>
@@ -199,7 +209,7 @@ const EnrollmentsManagement = () => {
               </Card>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid xs={12} sm={6} md={3}>
               <Card elevation={3}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Avatar sx={{ bgcolor: 'success.main', mx: 'auto', mb: 2 }}>
@@ -215,33 +225,33 @@ const EnrollmentsManagement = () => {
               </Card>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid xs={12} sm={6} md={3}>
               <Card elevation={3}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Avatar sx={{ bgcolor: 'info.main', mx: 'auto', mb: 2 }}>
                     <SchoolIcon />
                   </Avatar>
                   <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-                    {stats.popularCourses || 0}
+                    {stats.totalCourses || 0}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    الكورسات الأكثر شعبية
+                    الكورسات المسجلة
                   </Typography>
                 </CardContent>
               </Card>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid xs={12} sm={6} md={3}>
               <Card elevation={3}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Avatar sx={{ bgcolor: 'warning.main', mx: 'auto', mb: 2 }}>
-                    <AssignmentIcon />
+                    <CheckCircleIcon />
                   </Avatar>
                   <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-                    {stats.thisMonth || 0}
+                    {stats.completedEnrollments || 0}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    تسجيلات هذا الشهر
+                    تسجيلات مكتملة
                   </Typography>
                 </CardContent>
               </Card>
@@ -249,13 +259,13 @@ const EnrollmentsManagement = () => {
           </Grid>
         )}
 
-        {/* Search and Filters */}
-        <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+        {/* Filters */}
+        <Paper elevation={2} sx={{ p: 3, mb: 4, borderRadius: 2 }}>
           <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <TextField
                 fullWidth
-                placeholder="البحث في التسجيلات..."
+                placeholder="ابحث في التسجيلات..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 InputProps={{
@@ -267,39 +277,32 @@ const EnrollmentsManagement = () => {
                 }}
               />
             </Grid>
-            <Grid item xs={12} md={3}>
-              <TextField
-                select
-                fullWidth
-                label="تصفية حسب الحالة"
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                SelectProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <FilterIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              >
-                <option value="all">جميع الحالات</option>
-                <option value="active">نشط</option>
-                <option value="completed">مكتمل</option>
-                <option value="inactive">غير نشط</option>
-              </TextField>
+            <Grid xs={12} md={3}>
+              <FormControl fullWidth>
+                <InputLabel>حالة التسجيل</InputLabel>
+                <Select
+                  value={filterStatus}
+                  label="حالة التسجيل"
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                >
+                  <MenuItem value="all">جميع الحالات</MenuItem>
+                  <MenuItem value="active">نشط</MenuItem>
+                  <MenuItem value="completed">مكتمل</MenuItem>
+                  <MenuItem value="cancelled">ملغي</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid xs={12} md={3}>
               <Button
-                variant="outlined"
-                startIcon={<RefreshIcon />}
+                variant="contained"
+                fullWidth
                 onClick={() => {
                   setSearchTerm('');
                   setFilterStatus('all');
-                  setPage(0);
                 }}
-                fullWidth
+                startIcon={<ClearIcon />}
               >
-                إعادة تعيين
+                مسح الفلاتر
               </Button>
             </Grid>
           </Grid>
@@ -451,7 +454,7 @@ const EnrollmentsManagement = () => {
             {selectedEnrollment && (
               <Box sx={{ mt: 2 }}>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
+                  <Grid xs={12} md={6}>
                     <Typography variant="h6" gutterBottom>معلومات الطالب</Typography>
                     <Box sx={{ mb: 2 }}>
                       <Typography variant="body2" color="text.secondary">الاسم:</Typography>
@@ -468,7 +471,7 @@ const EnrollmentsManagement = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid xs={12} md={6}>
                     <Typography variant="h6" gutterBottom>معلومات الكورس</Typography>
                     <Box sx={{ mb: 2 }}>
                       <Typography variant="body2" color="text.secondary">عنوان الكورس:</Typography>
@@ -483,7 +486,7 @@ const EnrollmentsManagement = () => {
                       <Typography variant="body1">{selectedEnrollment.course?.grade}</Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid xs={12}>
                     <Typography variant="h6" gutterBottom>معلومات التسجيل</Typography>
                     <Box sx={{ mb: 2 }}>
                       <Typography variant="body2" color="text.secondary">تاريخ التسجيل:</Typography>

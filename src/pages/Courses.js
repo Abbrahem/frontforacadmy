@@ -30,7 +30,9 @@ import {
   Person as PersonIcon,
   AccessTime as TimeIcon,
   People as PeopleIcon,
-  PlayCircle as PlayIcon
+  PlayCircle as PlayIcon,
+  CheckCircle as CheckCircleIcon,
+  TrendingUp as TrendingUpIcon
 } from '@mui/icons-material';
 
 const Courses = () => {
@@ -248,10 +250,79 @@ const Courses = () => {
           </Typography>
         </Box>
 
+        {/* Filter Cards */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid xs={12} md={3}>
+            <Card elevation={3}>
+              <CardContent sx={{ textAlign: 'center' }}>
+                <Avatar sx={{ bgcolor: 'primary.main', mx: 'auto', mb: 2 }}>
+                  <SchoolIcon />
+                </Avatar>
+                <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
+                  {courses.length}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  إجمالي الكورسات
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid xs={12} md={3}>
+            <Card elevation={3}>
+              <CardContent sx={{ textAlign: 'center' }}>
+                <Avatar sx={{ bgcolor: 'success.main', mx: 'auto', mb: 2 }}>
+                  <CheckCircleIcon />
+                </Avatar>
+                <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
+                  {courses.filter(course => course.isApproved).length}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  الكورسات المعتمدة
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid xs={12} md={3}>
+            <Card elevation={3}>
+              <CardContent sx={{ textAlign: 'center' }}>
+                <Avatar sx={{ bgcolor: 'info.main', mx: 'auto', mb: 2 }}>
+                  <PeopleIcon />
+                </Avatar>
+                <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
+                  {/* Assuming a totalStudents count or a placeholder */}
+                  0
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  إجمالي الطلاب
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid xs={12} md={3}>
+            <Card elevation={3}>
+              <CardContent sx={{ textAlign: 'center' }}>
+                <Avatar sx={{ bgcolor: 'warning.main', mx: 'auto', mb: 2 }}>
+                  <TrendingUpIcon />
+                </Avatar>
+                <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
+                  {/* Assuming a totalEnrollments count or a placeholder */}
+                  0
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  إجمالي التسجيلات
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+
         {/* Filters */}
         <Paper elevation={2} sx={{ p: 3, mb: 4, borderRadius: 2 }}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={3}>
+            <Grid xs={12} md={3}>
               <TextField
                 fullWidth
                 placeholder="ابحث في الكورسات..."
@@ -266,7 +337,7 @@ const Courses = () => {
                 }}
               />
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid xs={12} md={3}>
               <FormControl fullWidth>
                 <InputLabel>الصف</InputLabel>
                 <Select
@@ -287,7 +358,7 @@ const Courses = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid xs={12} md={3}>
               <FormControl fullWidth>
                 <InputLabel>القسم</InputLabel>
                 <Select
@@ -308,7 +379,7 @@ const Courses = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid xs={12} md={3}>
               <FormControl fullWidth>
                 <InputLabel>المادة</InputLabel>
                 <Select
@@ -349,7 +420,7 @@ const Courses = () => {
         ) : (
           <Grid container spacing={3}>
             {filteredCourses.map((course, index) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={course._id}>
+              <Grid xs={12} sm={6} md={4} lg={3} key={course._id}>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}

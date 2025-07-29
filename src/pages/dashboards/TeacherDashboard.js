@@ -17,18 +17,6 @@ const TeacherDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [enrolledStudents, setEnrolledStudents] = useState([]);
 
-  useEffect(() => {
-    const loadData = async () => {
-      if (user?.isApproved) {
-        await fetchMyCourses();
-        await fetchEnrolledStudents();
-      } else {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, [user, fetchMyCourses]);
-
   const fetchMyCourses = useCallback(async () => {
     try {
       const response = await axios.get('/api/courses/teacher/my-courses');
@@ -40,6 +28,18 @@ const TeacherDashboard = () => {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (user?.isApproved) {
+        await fetchMyCourses();
+        await fetchEnrolledStudents();
+      } else {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, [user, fetchMyCourses]);
 
   const fetchEnrolledStudents = async () => {
     try {

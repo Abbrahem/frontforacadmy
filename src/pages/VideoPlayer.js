@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
+// import { useAuth } from '../context/AuthContext';
 
 const VideoPlayer = () => {
   const { id } = useParams();
@@ -14,14 +14,6 @@ const VideoPlayer = () => {
   const [loading, setLoading] = useState(true);
   const [watchTime, setWatchTime] = useState(0);
   const [hasMarkedWatched, setHasMarkedWatched] = useState(false);
-
-  useEffect(() => {
-    const loadData = async () => {
-      await fetchVideo();
-      await fetchQuiz();
-    };
-    loadData();
-  }, [id, fetchVideo, fetchQuiz]);
 
   const fetchVideo = useCallback(async () => {
     try {
@@ -47,6 +39,18 @@ const VideoPlayer = () => {
       // Quiz might not exist, which is okay
     }
   }, [id]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (fetchVideo) {
+        await fetchVideo();
+      }
+      if (fetchQuiz) {
+        await fetchQuiz();
+      }
+    };
+    loadData();
+  }, [id, fetchVideo, fetchQuiz]);
 
   const markVideoWatched = async () => {
     if (hasMarkedWatched) return;

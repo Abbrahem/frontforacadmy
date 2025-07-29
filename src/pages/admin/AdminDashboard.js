@@ -60,13 +60,6 @@ const AdminDashboard = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const loadData = async () => {
-      await fetchDashboardData();
-    };
-    loadData();
-  }, [fetchDashboardData]);
-
   const fetchDashboardData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
@@ -106,6 +99,15 @@ const AdminDashboard = () => {
       }
     }
   }, [navigate]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (fetchDashboardData) {
+        await fetchDashboardData();
+      }
+    };
+    loadData();
+  }, [fetchDashboardData]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -189,7 +191,7 @@ const AdminDashboard = () => {
 
         {/* Statistics Cards */}
         <Grid container spacing={2} sx={{ mb: 4 }}>
-          <Grid item xs={6} sm={6} md={3}>
+          <Grid xs={6} sm={6} md={3}>
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -211,7 +213,7 @@ const AdminDashboard = () => {
             </motion.div>
           </Grid>
 
-          <Grid item xs={6} sm={6} md={3}>
+          <Grid xs={6} sm={6} md={3}>
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -233,7 +235,7 @@ const AdminDashboard = () => {
             </motion.div>
           </Grid>
 
-          <Grid item xs={6} sm={6} md={3}>
+          <Grid xs={6} sm={6} md={3}>
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -255,7 +257,7 @@ const AdminDashboard = () => {
             </motion.div>
           </Grid>
 
-          <Grid item xs={6} sm={6} md={3}>
+          <Grid xs={6} sm={6} md={3}>
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -292,7 +294,7 @@ const AdminDashboard = () => {
 
             <Grid container spacing={3}>
               {/* Overall Performance Metrics */}
-              <Grid item xs={12} md={6}>
+              <Grid xs={12} md={6}>
                 <Card elevation={2} sx={{ p: 2 }}>
                   <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
                     <TimelineIcon sx={{ mr: 1, color: 'info.main' }} />
@@ -351,7 +353,7 @@ const AdminDashboard = () => {
               </Grid>
 
               {/* Performance Rating */}
-              <Grid item xs={12} md={6}>
+              <Grid xs={12} md={6}>
                 <Card elevation={2} sx={{ p: 2 }}>
                   <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
                     <StarIcon sx={{ mr: 1, color: 'warning.main' }} />
@@ -410,7 +412,7 @@ const AdminDashboard = () => {
             ) : (
               <Grid container spacing={2}>
                 {topPerformers.slice(0, 6).map((performer, index) => (
-                  <Grid item xs={12} sm={6} md={4} key={performer._id}>
+                  <Grid xs={12} sm={6} md={4} key={performer._id}>
                     <Card elevation={2} sx={{ p: 2 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                         <Avatar sx={{ bgcolor: index < 3 ? 'warning.main' : 'primary.main', mr: 2 }}>
@@ -568,7 +570,7 @@ const AdminDashboard = () => {
 
         {/* Quick Actions */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} md={6}>
+          <Grid xs={12} md={6}>
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -653,7 +655,7 @@ const AdminDashboard = () => {
             </motion.div>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid xs={12} md={6}>
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}

@@ -56,13 +56,6 @@ const PerformanceManagement = () => {
   const [filterRating, setFilterRating] = useState('all');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const loadData = async () => {
-      await fetchPerformanceData();
-    };
-    loadData();
-  }, [fetchPerformanceData]);
-
   const fetchPerformanceData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
@@ -94,6 +87,15 @@ const PerformanceManagement = () => {
       }
     }
   }, [navigate]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (fetchPerformanceData) {
+        await fetchPerformanceData();
+      }
+    };
+    loadData();
+  }, [fetchPerformanceData]);
 
   const getPerformanceColor = (rating) => {
     if (rating >= 90) return 'success';

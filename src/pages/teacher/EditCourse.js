@@ -47,15 +47,6 @@ const EditCourse = () => {
     price: 0
   });
 
-  useEffect(() => {
-    const loadData = async () => {
-      if (fetchCourseData) {
-        await fetchCourseData();
-      }
-    };
-    loadData();
-  }, [id, fetchCourseData]);
-
   const fetchCourseData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
@@ -88,6 +79,15 @@ const EditCourse = () => {
       }
     }
   }, [id, navigate]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (fetchCourseData) {
+        await fetchCourseData();
+      }
+    };
+    loadData();
+  }, [id, fetchCourseData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
