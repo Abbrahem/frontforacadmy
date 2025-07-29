@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+
 import { motion } from 'framer-motion';
 import { 
   Box, 
@@ -10,7 +10,6 @@ import {
   Grid, 
   Card, 
   CardContent, 
-  CardMedia, 
   Button, 
   Chip, 
   Avatar,
@@ -27,8 +26,6 @@ import {
 import { 
   Search as SearchIcon,
   School as SchoolIcon,
-  Person as PersonIcon,
-  AccessTime as TimeIcon,
   People as PeopleIcon,
   PlayCircle as PlayIcon,
   CheckCircle as CheckCircleIcon,
@@ -105,11 +102,7 @@ const Courses = () => {
     return [];
   };
 
-  const subjects = [
-    'اللغة العربية', 'الرياضيات', 'التاريخ', 'الجغرافيا', 'العلوم', 
-    'الكيمياء', 'الفيزياء', 'الأحياء', 'الفلسفة', 'الفرنساوي', 
-    'التربية الدينية', 'الإنجليزية', 'جيولوجيا'
-  ];
+
 
   const grades = [
     'الرابع الابتدائي', 'الخامس الابتدائي', 'السادس الابتدائي',
@@ -225,8 +218,6 @@ const Courses = () => {
         return '#388E3C'; // Darker Green
       case 'الفلسفة':
         return '#F57C00'; // Darker Amber
-      case 'الرياضيات': // This case is handled by the main switch, but kept for consistency
-        return '#FBC02D'; // Darker Orange
       default:
         return '#607D8B'; // Darker Grey
     }

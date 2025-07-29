@@ -278,7 +278,7 @@ const CreateCourse = () => {
         
           <Box component="form" onSubmit={handleSubmit}>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
+              <Grid xs={12}>
           <TextField
                   fullWidth
             required
@@ -294,7 +294,7 @@ const CreateCourse = () => {
           />
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid xs={12} md={6}>
                 <FormControl fullWidth required error={!!errors.grade}>
                   <InputLabel id="grade-label">الصف الدراسي</InputLabel>
                   <Select
@@ -321,7 +321,7 @@ const CreateCourse = () => {
 
               {/* Division Selection for Secondary Grades */}
               {needsDivisionSelection(formData.grade) && (
-                <Grid item xs={12} md={6}>
+                <Grid xs={12} md={6}>
                   <FormControl fullWidth required error={!!errors.division}>
                     <InputLabel id="division-label">القسم</InputLabel>
                     <Select
@@ -347,7 +347,7 @@ const CreateCourse = () => {
                 </Grid>
               )}
 
-              <Grid item xs={12} md={6}>
+              <Grid xs={12} md={6}>
                 <FormControl fullWidth required error={!!errors.subject}>
                   <InputLabel id="subject-label">المادة</InputLabel>
                   <Select
@@ -372,7 +372,7 @@ const CreateCourse = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid xs={12}>
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="h6" gutterBottom>
                     صورة الغلاف
@@ -417,7 +417,7 @@ const CreateCourse = () => {
                 )}
               </Grid>
               
-              <Grid item xs={12}>
+              <Grid xs={12}>
           <TextField
                   fullWidth
             required

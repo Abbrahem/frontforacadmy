@@ -35,8 +35,6 @@ import {
   People as PeopleIcon,
   School as SchoolIcon,
   Pending as PendingIcon,
-  CheckCircle as ApprovedIcon,
-  Cancel as RejectedIcon,
   Dashboard as DashboardIcon,
   Notifications as NotificationsIcon,
   Person as PersonIcon,

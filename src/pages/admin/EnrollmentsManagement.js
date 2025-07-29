@@ -38,14 +38,12 @@ import {
 } from '@mui/material';
 import { 
   Search as SearchIcon,
-  FilterList as FilterIcon,
   Person as PersonIcon,
   School as SchoolIcon,
   TrendingUp as TrendingUpIcon,
   Assignment as AssignmentIcon,
   Visibility as ViewIcon,
   Delete as DeleteIcon,
-  Refresh as RefreshIcon,
   Clear as ClearIcon,
   CheckCircle as CheckCircleIcon
 } from '@mui/icons-material';

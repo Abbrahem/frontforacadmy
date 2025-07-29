@@ -36,13 +36,11 @@ import {
   Analytics as AnalyticsIcon,
   TrendingUp as TrendingUpIcon,
   EmojiEvents as TrophyIcon,
-  Star as StarIcon,
-  Timeline as TimelineIcon,
-  Psychology as PsychologyIcon,
   School as SchoolIcon,
   Person as PersonIcon,
   // FilterList as FilterIcon,
-  Download as DownloadIcon
+  Download as DownloadIcon,
+  Assignment as AssignmentIcon
 } from '@mui/icons-material';
 
 const PerformanceManagement = () => {
@@ -176,72 +174,74 @@ const PerformanceManagement = () => {
           </Typography>
         </Box>
 
-        {/* Overall Performance Summary */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card elevation={3}>
-              <CardContent sx={{ textAlign: 'center' }}>
-                <Avatar sx={{ bgcolor: 'primary.main', mx: 'auto', mb: 2 }}>
-                  <TimelineIcon />
-                </Avatar>
-                <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-                  {performanceData?.overallCompletionRate || 0}%
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  معدل إكمال الكورسات
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+        {/* Statistics Cards */}
+        {performanceData?.summary && (
+          <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Grid xs={12} sm={6} md={3}>
+              <Card elevation={3}>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <Avatar sx={{ bgcolor: 'primary.main', mx: 'auto', mb: 2 }}>
+                    <TrendingUpIcon />
+                  </Avatar>
+                  <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
+                    {performanceData.summary.averageScore || 0}%
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    متوسط الدرجات
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
-            <Card elevation={3}>
-              <CardContent sx={{ textAlign: 'center' }}>
-                <Avatar sx={{ bgcolor: 'success.main', mx: 'auto', mb: 2 }}>
-                  <PsychologyIcon />
-                </Avatar>
-                <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-                  {performanceData?.quizSuccessRate || 0}%
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  معدل نجاح الاختبارات
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+            <Grid xs={12} sm={6} md={3}>
+              <Card elevation={3}>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <Avatar sx={{ bgcolor: 'success.main', mx: 'auto', mb: 2 }}>
+                    <PersonIcon />
+                  </Avatar>
+                  <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
+                    {performanceData.summary.totalStudents || 0}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    إجمالي الطلاب
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
-            <Card elevation={3}>
-              <CardContent sx={{ textAlign: 'center' }}>
-                <Avatar sx={{ bgcolor: 'info.main', mx: 'auto', mb: 2 }}>
-                  <StarIcon />
-                </Avatar>
-                <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-                  {performanceData?.averageQuizScore || 0}%
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  متوسط درجات الاختبارات
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+            <Grid xs={12} sm={6} md={3}>
+              <Card elevation={3}>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <Avatar sx={{ bgcolor: 'info.main', mx: 'auto', mb: 2 }}>
+                    <SchoolIcon />
+                  </Avatar>
+                  <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
+                    {performanceData.summary.totalCourses || 0}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    إجمالي الكورسات
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
-            <Card elevation={3}>
-              <CardContent sx={{ textAlign: 'center' }}>
-                <Avatar sx={{ bgcolor: 'warning.main', mx: 'auto', mb: 2 }}>
-                  <TrendingUpIcon />
-                </Avatar>
-                <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-                  {performanceData?.overallRating || 0}/100
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  التقييم العام
-                </Typography>
-              </CardContent>
-            </Card>
+            <Grid xs={12} sm={6} md={3}>
+              <Card elevation={3}>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <Avatar sx={{ bgcolor: 'warning.main', mx: 'auto', mb: 2 }}>
+                    <AssignmentIcon />
+                  </Avatar>
+                  <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
+                    {performanceData.summary.totalQuizzes || 0}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    إجمالي الاختبارات
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
+        )}
 
         {/* Tabs */}
         <Paper elevation={3} sx={{ mb: 4 }}>
@@ -419,7 +419,7 @@ const PerformanceManagement = () => {
                 ) : (
                   <Grid container spacing={2}>
                     {coursePerformance.map((course) => (
-                      <Grid item xs={12} md={6} key={course._id}>
+                      <Grid xs={12} md={6} key={course._id}>
                         <Card elevation={2}>
                           <CardContent>
                             <Typography variant="h6" gutterBottom>
@@ -487,7 +487,7 @@ const PerformanceManagement = () => {
                 </Typography>
 
                 <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
+                  <Grid xs={12} md={6}>
                     <Card elevation={2}>
                       <CardContent>
                         <Typography variant="h6" gutterBottom>
@@ -513,29 +513,16 @@ const PerformanceManagement = () => {
                             </Typography>
                           </Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                            <Typography variant="body2">الفيديوهات المشاهدة</Typography>
-                            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                              {performanceData?.summary?.watchedVideos || 0}
-                            </Typography>
-                          </Box>
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                             <Typography variant="body2">إجمالي الاختبارات</Typography>
                             <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                               {performanceData?.summary?.totalQuizzes || 0}
-                            </Typography>
-                          </Box>
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Typography variant="body2">الاختبارات الناجحة</Typography>
-                            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                              {performanceData?.summary?.passedQuizzes || 0}
                             </Typography>
                           </Box>
                         </Box>
                       </CardContent>
                     </Card>
                   </Grid>
-
-                  <Grid item xs={12} md={6}>
+                  <Grid xs={12} md={6}>
                     <Card elevation={2}>
                       <CardContent>
                         <Typography variant="h6" gutterBottom>

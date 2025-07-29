@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
   const { user, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
+
   const [latestCourses, setLatestCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [contactForm, setContactForm] = useState({

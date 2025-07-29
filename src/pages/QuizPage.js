@@ -25,7 +25,6 @@ import {
 import { 
   Quiz as QuizIcon,
   CheckCircle as CheckIcon,
-  Cancel as CancelIcon,
   ArrowForward as ArrowForwardIcon,
   ArrowBack as ArrowBackIcon,
   Timer as TimerIcon,

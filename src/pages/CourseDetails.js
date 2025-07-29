@@ -7,22 +7,18 @@ import {
   Box, 
   Typography, 
   Container, 
-  Paper, 
-  Button, 
-  Chip, 
-  Grid,
-  Card,
-  CardContent,
-  CardMedia,
+  Button,
+  Chip,
+  Avatar,
+  LinearProgress,
+  Alert,
+  CircularProgress,
+  Rating,
   List,
   ListItem,
   ListItemText,
   ListItemIcon,
   Divider,
-  CircularProgress,
-  Alert,
-  Avatar,
-  LinearProgress,
   CardActions,
   IconButton,
   Tooltip,
@@ -30,14 +26,15 @@ import {
   Stepper,
   Step,
   StepLabel,
-  StepContent
+  StepContent,
+  Paper
 } from '@mui/material';
 import { 
-  PlayCircle as PlayIcon,
-  Quiz as QuizIcon,
   School as SchoolIcon,
   Person as PersonIcon,
-  AccessTime as TimeIcon,
+  PlayCircle as PlayIcon,
+  Assignment as AssignmentIcon,
+  Book as BookIcon,
   Star as StarIcon,
   CheckCircle as CheckIcon,
   Lock as LockIcon,
@@ -46,9 +43,9 @@ import {
   TrendingUp as TrendingUpIcon,
   EmojiEvents as TrophyIcon,
   VideoLibrary as VideoLibraryIcon,
-  Assignment as AssignmentIcon,
   ArrowForward as ArrowForwardIcon,
-  Info as InfoIcon
+  Info as InfoIcon,
+  Quiz as QuizIcon
 } from '@mui/icons-material';
 
 const CourseDetails = () => {

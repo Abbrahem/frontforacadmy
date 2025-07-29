@@ -16,21 +16,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  FormControlLabel,
-  Switch,
   CircularProgress,
   Alert,
-  Chip,
-  Avatar,
-  Paper
+  Chip
 } from '@mui/material';
 import { 
   Edit as EditIcon,
-  Save as SaveIcon,
-  ArrowBack as ArrowBackIcon,
-  School as SchoolIcon,
-  Person as PersonIcon,
-  Category as CategoryIcon
+  ArrowBack as ArrowBackIcon
 } from '@mui/icons-material';
 
 const EditCourse = () => {
@@ -38,104 +30,18 @@ const EditCourse = () => {
   const navigate = useNavigate();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [teachers, setTeachers] = useState([]);
 
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     subject: '',
     grade: '',
-    teacher: '',
+    division: '',
     isApproved: false,
     isActive: false,
     price: 0
   });
-
-  const fetchCourseData = useCallback(async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        navigate('/admin');
-        return;
-      }
-
-      const response = await axios.get(`/api/admin/courses/${id}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      const courseData = response.data.course;
-      setCourse(courseData);
-      setFormData({
-        title: courseData.title || '',
-        description: courseData.description || '',
-        subject: courseData.subject || '',
-        grade: courseData.grade || '',
-        teacher: courseData.teacher?._id || '',
-        isApproved: courseData.isApproved || false,
-        isActive: courseData.isActive || false,
-        price: courseData.price || 0
-      });
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching course:', error);
-      setError('فشل في تحميل بيانات الكورس');
-      setLoading(false);
-      
-      if (error.response?.status === 401) {
-        navigate('/admin');
-      }
-    }
-  }, [id, navigate]);
-
-  const fetchTeachers = useCallback(async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('/api/admin/teachers', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      setTeachers(response.data.teachers || []);
-    } catch (error) {
-      console.error('Error fetching teachers:', error);
-    }
-  }, []);
-
-  useEffect(() => {
-    const loadData = async () => {
-      await fetchCourseData();
-      await fetchTeachers();
-    };
-    loadData();
-  }, [id, fetchCourseData, fetchTeachers]);
-
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-
-    try {
-      const token = localStorage.getItem('token');
-      await axios.put(`/api/admin/courses/${id}`, formData, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      toast.success('تم تحديث الكورس بنجاح');
-      navigate('/admin/courses');
-    } catch (error) {
-      console.error('Error updating course:', error);
-      toast.error(error.response?.data?.message || 'فشل في تحديث الكورس');
-    } finally {
-      setSaving(false);
-    }
-  };
 
   const subjects = [
     'الرياضيات',
@@ -168,6 +74,77 @@ const EditCourse = () => {
     'الصف الثاني الثانوي',
     'الصف الثالث الثانوي'
   ];
+
+
+  const fetchCourseData = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/admin');
+        return;
+      }
+
+      const response = await axios.get(`/api/admin/courses/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      const courseData = response.data.course;
+      setCourse(courseData);
+      setFormData({
+        title: courseData.title || '',
+        description: courseData.description || '',
+        subject: courseData.subject || '',
+        grade: courseData.grade || '',
+        division: courseData.division || '',
+        isApproved: courseData.isApproved || false,
+        isActive: courseData.isActive || false,
+        price: courseData.price || 0
+      });
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching course:', error);
+      setError('فشل في تحميل بيانات الكورس');
+      setLoading(false);
+      
+      if (error.response?.status === 401) {
+        navigate('/admin');
+      }
+    }
+  }, [id, navigate]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      await fetchCourseData();
+    };
+    loadData();
+  }, [id, fetchCourseData]);
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.put(`/api/admin/courses/${id}`, formData, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      toast.success('تم تحديث الكورس بنجاح');
+      navigate('/admin/courses');
+    } catch (error) {
+      console.error('Error updating course:', error);
+      toast.error('فشل في تحديث الكورس');
+    }
+  };
+
+
 
   if (loading) {
     return (
@@ -215,223 +192,167 @@ const EditCourse = () => {
         </Box>
 
         <Grid container spacing={3}>
-          {/* Course Info Card */}
-          <Grid item xs={12} md={4}>
+          <Grid xs={12} md={4}>
             <Card elevation={3}>
               <CardContent>
-                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
-                  <SchoolIcon sx={{ mr: 1, color: 'primary.main' }} />
+                <Typography variant="h6" gutterBottom>
                   معلومات الكورس
                 </Typography>
-                
-                <Box sx={{ mt: 2 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
-                      <SchoolIcon />
-                    </Avatar>
-                    <Box>
-                      <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                        {course?.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {course?.subject}
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Avatar sx={{ bgcolor: 'success.main', mr: 2 }}>
-                      <PersonIcon />
-                    </Avatar>
-                    <Box>
-                      <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                        {course?.teacher?.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        المدرس
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Avatar sx={{ bgcolor: 'info.main', mr: 2 }}>
-                      <CategoryIcon />
-                    </Avatar>
-                    <Box>
-                      <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                        {course?.grade}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        الصف الدراسي
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  <Box sx={{ mt: 3 }}>
-                    <Chip 
-                      label={course?.isApproved ? 'تمت الموافقة' : 'في الانتظار'}
-                      color={course?.isApproved ? 'success' : 'warning'}
-                      sx={{ mr: 1, mb: 1 }}
-                    />
-                    <Chip 
-                      label={course?.isActive ? 'نشط' : 'غير نشط'}
-                      color={course?.isActive ? 'success' : 'default'}
-                    />
-                  </Box>
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body2" color="text.secondary">العنوان:</Typography>
+                  <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                    {course?.title || 'غير محدد'}
+                  </Typography>
+                </Box>
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body2" color="text.secondary">المادة:</Typography>
+                  <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                    {course?.subject || 'غير محدد'}
+                  </Typography>
+                </Box>
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body2" color="text.secondary">المرحلة:</Typography>
+                  <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                    {course?.grade || 'غير محدد'}
+                  </Typography>
+                </Box>
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body2" color="text.secondary">القسم:</Typography>
+                  <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                    {course?.division || 'غير محدد'}
+                  </Typography>
+                </Box>
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body2" color="text.secondary">الحالة:</Typography>
+                  <Chip 
+                    label={course?.isApproved ? 'معتمد' : 'في انتظار الاعتماد'}
+                    color={course?.isApproved ? 'success' : 'warning'}
+                    size="small"
+                  />
+                </Box>
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body2" color="text.secondary">تاريخ الإنشاء:</Typography>
+                  <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                    {course?.createdAt ? new Date(course.createdAt).toLocaleDateString('ar-EG') : 'غير محدد'}
+                  </Typography>
                 </Box>
               </CardContent>
             </Card>
           </Grid>
 
-          {/* Edit Form */}
-          <Grid item xs={12} md={8}>
-            <Paper elevation={3} sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                تعديل معلومات الكورس
-              </Typography>
-
-              <form onSubmit={handleSubmit}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="عنوان الكورس"
-                      name="title"
-                      value={formData.title}
-                      onChange={handleInputChange}
-                      required
-                      variant="outlined"
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="وصف الكورس"
-                      name="description"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      multiline
-                      rows={4}
-                      variant="outlined"
-                    />
-                  </Grid>
-
-                  <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth>
-                      <InputLabel>المادة الدراسية</InputLabel>
-                      <Select
-                        name="subject"
-                        value={formData.subject}
+          <Grid xs={12} md={8}>
+            <Card elevation={3}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  تعديل الكورس
+                </Typography>
+                
+                <form onSubmit={handleSubmit}>
+                  <Grid container spacing={2}>
+                    <Grid xs={12}>
+                      <TextField
+                        fullWidth
+                        label="عنوان الكورس"
+                        name="title"
+                        value={formData.title}
                         onChange={handleInputChange}
-                        label="المادة الدراسية"
-                      >
-                        {subjects.map((subject) => (
-                          <MenuItem key={subject} value={subject}>
-                            {subject}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth>
-                      <InputLabel>الصف الدراسي</InputLabel>
-                      <Select
-                        name="grade"
-                        value={formData.grade}
-                        onChange={handleInputChange}
-                        label="الصف الدراسي"
-                      >
-                        {grades.map((grade) => (
-                          <MenuItem key={grade} value={grade}>
-                            {grade}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth>
-                      <InputLabel>المدرس</InputLabel>
-                      <Select
-                        name="teacher"
-                        value={formData.teacher}
-                        onChange={handleInputChange}
-                        label="المدرس"
-                      >
-                        {teachers.map((teacher) => (
-                          <MenuItem key={teacher._id} value={teacher._id}>
-                            {teacher.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="السعر"
-                      name="price"
-                      type="number"
-                      value={formData.price}
-                      onChange={handleInputChange}
-                      variant="outlined"
-                      InputProps={{
-                        endAdornment: <Typography variant="body2">جنيه</Typography>
-                      }}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={formData.isApproved}
-                            onChange={handleInputChange}
-                            name="isApproved"
-                          />
-                        }
-                        label="موافقة على الكورس"
+                        required
+                        sx={{ mb: 2 }}
                       />
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={formData.isActive}
-                            onChange={handleInputChange}
-                            name="isActive"
-                          />
-                        }
-                        label="تفعيل الكورس"
+                    </Grid>
+                    <Grid xs={12}>
+                      <TextField
+                        fullWidth
+                        label="وصف الكورس"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        multiline
+                        rows={4}
+                        required
+                        sx={{ mb: 2 }}
                       />
-                    </Box>
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-                      <Button
-                        variant="outlined"
-                        onClick={() => navigate('/admin/courses')}
-                      >
-                        إلغاء
-                      </Button>
+                    </Grid>
+                    <Grid xs={12} sm={6}>
+                      <FormControl fullWidth sx={{ mb: 2 }}>
+                        <InputLabel>المادة</InputLabel>
+                        <Select
+                          name="subject"
+                          value={formData.subject}
+                          onChange={handleInputChange}
+                          required
+                        >
+                          {subjects.map((subject) => (
+                            <MenuItem key={subject} value={subject}>
+                              {subject}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid xs={12} sm={6}>
+                      <FormControl fullWidth sx={{ mb: 2 }}>
+                        <InputLabel>المرحلة</InputLabel>
+                        <Select
+                          name="grade"
+                          value={formData.grade}
+                          onChange={handleInputChange}
+                          required
+                        >
+                          {grades.map((grade) => (
+                            <MenuItem key={grade} value={grade}>
+                              {grade}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid xs={12} sm={6}>
+                      <FormControl fullWidth sx={{ mb: 2 }}>
+                        <InputLabel>القسم</InputLabel>
+                        <Select
+                          name="division"
+                          value={formData.division}
+                          onChange={handleInputChange}
+                          required
+                        >
+                          {['علمي', 'أدبي'].map((division) => (
+                            <MenuItem key={division} value={division}>
+                              {division}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid xs={12} sm={6}>
+                      <FormControl fullWidth sx={{ mb: 2 }}>
+                        <InputLabel>حالة الاعتماد</InputLabel>
+                        <Select
+                          name="isApproved"
+                          value={formData.isApproved}
+                          onChange={handleInputChange}
+                          required
+                        >
+                          <MenuItem value={true}>معتمد</MenuItem>
+                          <MenuItem value={false}>غير معتمد</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid xs={12}>
                       <Button
                         type="submit"
                         variant="contained"
-                        startIcon={saving ? <CircularProgress size={20} /> : <SaveIcon />}
-                        disabled={saving}
+                        fullWidth
+                        disabled={loading}
+                        sx={{ mt: 2 }}
                       >
-                        {saving ? 'جاري الحفظ...' : 'حفظ التعديلات'}
+                        {loading ? 'جاري الحفظ...' : 'حفظ التغييرات'}
                       </Button>
-                    </Box>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </form>
-            </Paper>
+                </form>
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
       </motion.div>

@@ -169,7 +169,7 @@ const CourseRequests = () => {
         ) : (
           <Grid container spacing={3}>
             {pendingCourses.map((request, index) => (
-              <Grid item xs={12} md={6} lg={4} key={request.requestId}>
+              <Grid xs={12} md={6} lg={4} key={request.requestId}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -299,7 +299,7 @@ const CourseRequests = () => {
             {selectedRequest && (
               <Box sx={{ mt: 2 }}>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
+                  <Grid xs={12} md={6}>
                     <Typography variant="h6" gutterBottom>معلومات الكورس</Typography>
                     <Typography variant="body1" sx={{ mb: 1 }}>
                       <strong>اسم الكورس:</strong> {selectedRequest.title}
@@ -317,7 +317,7 @@ const CourseRequests = () => {
                       {selectedRequest.description}
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid xs={12} md={6}>
                     <Typography variant="h6" gutterBottom>صورة الغلاف</Typography>
                     {selectedRequest.coverImage ? (
                       <Box sx={{ textAlign: 'center' }}>
@@ -338,7 +338,7 @@ const CourseRequests = () => {
                       </Typography>
                     )}
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid xs={12} md={6}>
                     <Typography variant="h6" gutterBottom>معلومات المعلم</Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                       <Avatar sx={{ mr: 2 }}>
