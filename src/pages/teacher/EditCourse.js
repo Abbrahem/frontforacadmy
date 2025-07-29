@@ -30,7 +30,6 @@ const EditCourse = () => {
   const navigate = useNavigate();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
   const [formData, setFormData] = useState({
@@ -93,7 +92,6 @@ const EditCourse = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSaving(true);
 
     try {
       const token = localStorage.getItem('token');
@@ -106,8 +104,6 @@ const EditCourse = () => {
     } catch (error) {
       console.error('Error updating course:', error);
       toast.error(error.response?.data?.message || 'فشل في تحديث الكورس');
-    } finally {
-      setSaving(false);
     }
   };
 

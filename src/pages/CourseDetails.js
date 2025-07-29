@@ -1,56 +1,29 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { motion } from 'framer-motion';
-import { 
-  Box, 
-  Typography, 
-  Container, 
+import {
+  Box,
+  Typography,
+  Container,
   Button,
   Chip,
   Avatar,
-  LinearProgress,
-  Alert,
+  Paper,
   CircularProgress,
-  Rating,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Divider,
-  CardActions,
-  IconButton,
-  Tooltip,
-  Badge,
-  Stepper,
-  Step,
-  StepLabel,
-  StepContent,
-  Paper
+  Alert,
+  LinearProgress
 } from '@mui/material';
-import { 
-  School as SchoolIcon,
-  Person as PersonIcon,
-  PlayCircle as PlayIcon,
-  Assignment as AssignmentIcon,
-  Book as BookIcon,
-  Star as StarIcon,
-  CheckCircle as CheckIcon,
-  Lock as LockIcon,
-  Bookmark as BookmarkIcon,
-  BookmarkBorder as BookmarkBorderIcon,
-  TrendingUp as TrendingUpIcon,
-  EmojiEvents as TrophyIcon,
-  VideoLibrary as VideoLibraryIcon,
-  ArrowForward as ArrowForwardIcon,
-  Info as InfoIcon,
-  Quiz as QuizIcon
+import {
+  School,
+  Person,
+  PlayArrow,
+  Quiz
 } from '@mui/icons-material';
 
 const CourseDetails = () => {
-  const { id } = useParams();
-  const courseId = id;
+  const { courseId } = useParams();
   const navigate = useNavigate();
   const [course, setCourse] = useState(null);
   const [videos, setVideos] = useState([]);
@@ -58,10 +31,10 @@ const CourseDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isEnrolled, setIsEnrolled] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [enrollment, setEnrollment] = useState(null);
   const [enrolling, setEnrolling] = useState(false);
   const [progress, setProgress] = useState(null);
-  const [activeStep, setActiveStep] = useState(0);
 
   const fetchCourseDetails = useCallback(async () => {
     try {
@@ -117,33 +90,6 @@ const CourseDetails = () => {
     fetchCourseDetails();
     checkEnrollment();
   }, [fetchCourseDetails, checkEnrollment]);
-
-  // Update progress when enrollment changes
-  useEffect(() => {
-    if (enrollment && isEnrolled) {
-      // Initialize progress if not exists
-      const progress = enrollment.progress || {
-        completedVideos: [],
-        completedQuizzes: [],
-        quizScores: {},
-        quizzesTaken: []
-      };
-      setProgress(progress);
-    }
-  }, [enrollment, isEnrolled]);
-
-  // Update active step based on progress
-  useEffect(() => {
-    if (progress) {
-      const completedContent = (progress.completedVideos?.length || 0) + (progress.completedQuizzes?.length || 0);
-      const totalContent = videos.length + quizzes.length;
-      
-      if (totalContent > 0) {
-        const step = Math.floor((completedContent / totalContent) * 3); // 3 steps total
-        setActiveStep(Math.min(step, 2));
-      }
-    }
-  }, [progress, videos.length, quizzes.length]);
 
   const handleEnroll = async () => {
     const token = localStorage.getItem('token');
@@ -214,57 +160,6 @@ const CourseDetails = () => {
     navigate(`/quiz/${quiz._id}`);
   };
 
-  const getQuizScore = (quizId) => {
-    if (!progress || !progress.quizScores) return 0;
-    return progress.quizScores[quizId] || 0;
-  };
-
-  const handleVideoProgress = async (videoId) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        toast.error('يجب تسجيل الدخول أولاً');
-        return;
-      }
-
-      const response = await axios.put('/api/enrollments/update-video-progress', {
-        courseId: courseId,
-        videoId: videoId
-      });
-
-      if (response.data.success) {
-        toast.success('تم تحديث تقدم الفيديو بنجاح!');
-        
-        // Update local progress state
-        if (progress) {
-          const updatedProgress = { ...progress };
-          if (!updatedProgress.completedVideos.includes(videoId)) {
-            updatedProgress.completedVideos.push(videoId);
-          }
-          setProgress(updatedProgress);
-        }
-
-        // Update enrollment if available
-        if (enrollment) {
-          setEnrollment(response.data.enrollment);
-        }
-      }
-    } catch (error) {
-      console.error('Error updating video progress:', error);
-      toast.error('فشل في تحديث تقدم الفيديو');
-    }
-  };
-
-  const isVideoCompleted = (videoId) => {
-    if (!progress || !progress.completedVideos) return false;
-    return progress.completedVideos.includes(videoId);
-  };
-
-  const isQuizCompleted = (quizId) => {
-    if (!progress || !progress.completedQuizzes) return false;
-    return progress.completedQuizzes.includes(quizId);
-  };
-
   const userRole = localStorage.getItem('userRole');
   const isStudent = userRole === 'student';
   const totalContent = videos.length + quizzes.length;
@@ -289,27 +184,6 @@ const CourseDetails = () => {
       </Container>
     );
   }
-
-  const steps = [
-    {
-      label: 'التسجيل في الكورس',
-      description: 'قم بالتسجيل في الكورس للبدء في التعلم',
-      completed: isEnrolled,
-      error: false
-    },
-    {
-      label: 'مشاهدة الدروس',
-      description: `شاهد ${videos.length} درس من الدروس المتاحة`,
-      completed: progress && progress.completedVideos && progress.completedVideos.length > 0,
-      error: false
-    },
-    {
-      label: 'أداء الاختبارات',
-      description: `أدِ ${quizzes.length} اختبار من الاختبارات المتاحة`,
-      completed: progress && progress.completedQuizzes && progress.completedQuizzes.length > 0,
-      error: false
-    }
-  ];
 
   return (
     <Box sx={{ py: 4, px: 2 }}>
@@ -403,9 +277,9 @@ const CourseDetails = () => {
                         {/* Left side - Icon and timestamp */}
                         <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 100, mr: 3 }}>
                           {item.type === 'video' ? (
-                            <PlayIcon sx={{ fontSize: 18, color: 'rgba(255,255,255,0.6)', mr: 1 }} />
+                            <PlayArrow sx={{ fontSize: 18, color: 'rgba(255,255,255,0.6)', mr: 1 }} />
                           ) : (
-                            <QuizIcon sx={{ fontSize: 18, color: 'rgba(255,255,255,0.6)', mr: 1 }} />
+                                                          <Quiz sx={{ fontSize: 18, color: 'rgba(255,255,255,0.6)', mr: 1 }} />
                           )}
                           <Typography variant="body2" sx={{ 
                             color: 'rgba(255,255,255,0.8)',
@@ -452,7 +326,7 @@ const CourseDetails = () => {
                   bgcolor: 'rgba(255,255,255,0.2)',
                   mr: 2
                 }}>
-                  <PersonIcon sx={{ fontSize: 24 }} />
+                  <Person sx={{ fontSize: 24 }} />
                     </Avatar>
                 <Box>
                   <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
@@ -542,7 +416,7 @@ const CourseDetails = () => {
                       size="large"
                       onClick={handleEnroll}
                       disabled={enrolling}
-                      startIcon={enrolling ? <CircularProgress size={20} /> : <SchoolIcon />}
+                      startIcon={enrolling ? <CircularProgress size={20} /> : <School />}
                       sx={{
                       bgcolor: '#4CAF50',
                         color: 'white',
@@ -576,7 +450,7 @@ const CourseDetails = () => {
                     variant="contained"
                     size="large"
                     onClick={() => navigate(`/course/${courseId}/learn`)}
-                    startIcon={<PlayIcon />}
+                    startIcon={<PlayArrow />}
                     sx={{
                     bgcolor: '#4CAF50',
                       color: 'white',

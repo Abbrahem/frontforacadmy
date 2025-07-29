@@ -186,8 +186,6 @@ const Courses = () => {
         return '#4CAF50'; // Green
       case 'الفلسفة':
         return '#FFC107'; // Amber
-      case 'الرياضيات': // This case is handled by the main switch, but kept for consistency
-        return '#FF9800'; // Orange
       default:
         return '#9E9E9E'; // Grey
     }

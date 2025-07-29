@@ -19,8 +19,7 @@ import {
   Card,
   CardContent,
   Avatar,
-  Chip,
-  Divider
+  Chip
 } from '@mui/material';
 import { 
   Quiz as QuizIcon,
