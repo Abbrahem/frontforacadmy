@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -49,9 +49,9 @@ const EditCourse = () => {
 
   useEffect(() => {
     fetchCourseData();
-  }, [id]);
+  }, [id, fetchCourseData]);
 
-  const fetchCourseData = async () => {
+  const fetchCourseData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -82,7 +82,7 @@ const EditCourse = () => {
         navigate('/teacher');
       }
     }
-  };
+  }, [id, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -98,7 +98,7 @@ const EditCourse = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.put(`/api/courses/${id}`, formData, {
+      await axios.put(`/api/courses/${id}`, formData, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 

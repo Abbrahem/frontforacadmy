@@ -26,7 +26,6 @@ import {
   CloudUpload as CloudUploadIcon,
   Send as SendIcon,
   ArrowBack as ArrowBackIcon,
-  Image as ImageIcon
 } from '@mui/icons-material';
 
 const CreateCourse = () => {
@@ -43,7 +42,7 @@ const CreateCourse = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  const teacherName = localStorage.getItem('userName') || 'Teacher';
+  // const teacherName = localStorage.getItem('userName') || 'Teacher';
 
   // Function to get available subjects based on grade and division
   const getAvailableSubjects = (grade, division) => {
@@ -105,11 +104,11 @@ const CreateCourse = () => {
     return [];
   };
 
-  const subjects = [
-    'اللغة العربية', 'الرياضيات', 'التاريخ', 'الجغرافيا', 'العلوم', 
-    'الكيمياء', 'الفيزياء', 'الأحياء', 'الفلسفة', 'الفرنساوي', 
-    'التربية الدينية', 'الإنجليزية', 'جيولوجيا'
-  ];
+  // const subjects = [
+  //   'اللغة العربية', 'الرياضيات', 'التاريخ', 'الجغرافيا', 'العلوم', 
+  //   'الكيمياء', 'الفيزياء', 'الأحياء', 'الفلسفة', 'الفرنساوي', 
+  //   'التربية الدينية', 'الإنجليزية', 'جيولوجيا'
+  // ];
 
   const grades = [
     'الرابع الابتدائي', 'الخامس الابتدائي', 'السادس الابتدائي',

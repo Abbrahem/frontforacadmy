@@ -78,7 +78,7 @@ const UploadVideo = () => {
       formData.append('description', videoDescription);
       formData.append('courseId', selectedCourse);
 
-      const response = await axios.post('/api/videos/upload', formData, {
+      await axios.post('/api/videos/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },

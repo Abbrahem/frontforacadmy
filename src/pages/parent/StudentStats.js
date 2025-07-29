@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -47,9 +47,9 @@ const StudentStats = () => {
 
   useEffect(() => {
     fetchStudentData();
-  }, []);
+  }, [fetchStudentData]);
 
-  const fetchStudentData = async () => {
+  const fetchStudentData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -94,7 +94,7 @@ const StudentStats = () => {
         navigate('/login');
       }
     }
-  };
+  }, [navigate]);
 
   const filteredEnrollments = enrollments.filter(enrollment =>
     enrollment.course?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
