@@ -120,7 +120,7 @@ const EditCourse = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.put(`/api/admin/courses/${id}`, formData, {
+      await axios.put(`/api/admin/courses/${id}`, formData, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 

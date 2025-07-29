@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 const VideoPlayer = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [video, setVideo] = useState(null);
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,11 +16,14 @@ const VideoPlayer = () => {
   const [hasMarkedWatched, setHasMarkedWatched] = useState(false);
 
   useEffect(() => {
-    fetchVideo();
-    fetchQuiz();
-  }, [id]);
+    const loadData = async () => {
+      await fetchVideo();
+      await fetchQuiz();
+    };
+    loadData();
+  }, [id, fetchVideo, fetchQuiz]);
 
-  const fetchVideo = async () => {
+  const fetchVideo = useCallback(async () => {
     try {
       const response = await axios.get(`/api/videos/${id}`);
       setVideo(response.data);
@@ -31,9 +34,9 @@ const VideoPlayer = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, navigate]);
 
-  const fetchQuiz = async () => {
+  const fetchQuiz = useCallback(async () => {
     try {
       const response = await axios.get(`/api/quizzes/video/${id}`);
       if (response.data && response.data.quiz) {
@@ -43,7 +46,7 @@ const VideoPlayer = () => {
       console.error('Error fetching quiz:', error);
       // Quiz might not exist, which is okay
     }
-  };
+  }, [id]);
 
   const markVideoWatched = async () => {
     if (hasMarkedWatched) return;

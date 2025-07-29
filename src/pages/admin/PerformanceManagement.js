@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -30,7 +30,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  TextField
+  // TextField
 } from '@mui/material';
 import { 
   Analytics as AnalyticsIcon,
@@ -41,7 +41,7 @@ import {
   Psychology as PsychologyIcon,
   School as SchoolIcon,
   Person as PersonIcon,
-  FilterList as FilterIcon,
+  // FilterList as FilterIcon,
   Download as DownloadIcon
 } from '@mui/icons-material';
 
@@ -57,10 +57,13 @@ const PerformanceManagement = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchPerformanceData();
-  }, []);
+    const loadData = async () => {
+      await fetchPerformanceData();
+    };
+    loadData();
+  }, [fetchPerformanceData]);
 
-  const fetchPerformanceData = async () => {
+  const fetchPerformanceData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -90,7 +93,7 @@ const PerformanceManagement = () => {
         navigate('/admin');
       }
     }
-  };
+  }, [navigate]);
 
   const getPerformanceColor = (rating) => {
     if (rating >= 90) return 'success';

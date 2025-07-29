@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import { 
   Box, 
@@ -29,7 +29,7 @@ import {
   TableRow,
   LinearProgress,
   Rating,
-  Tooltip
+  // Tooltip
 } from '@mui/material';
 import { 
   People as PeopleIcon,
@@ -44,8 +44,8 @@ import {
   Assignment as AssignmentIcon,
   Star as StarIcon,
   EmojiEvents as TrophyIcon,
-  Speed as SpeedIcon,
-  Psychology as PsychologyIcon,
+  // Speed as SpeedIcon,
+  // Psychology as PsychologyIcon,
   Analytics as AnalyticsIcon,
   Timeline as TimelineIcon
 } from '@mui/icons-material';
@@ -61,10 +61,13 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    const loadData = async () => {
+      await fetchDashboardData();
+    };
+    loadData();
+  }, [fetchDashboardData]);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -102,7 +105,7 @@ const AdminDashboard = () => {
         navigate('/admin');
       }
     }
-  };
+  }, [navigate]);
 
   const getStatusColor = (status) => {
     switch (status) {

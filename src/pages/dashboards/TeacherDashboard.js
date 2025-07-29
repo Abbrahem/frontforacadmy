@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
@@ -24,9 +24,9 @@ const TeacherDashboard = () => {
     } else {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, fetchMyCourses]);
 
-  const fetchMyCourses = async () => {
+  const fetchMyCourses = useCallback(async () => {
     try {
       const response = await axios.get('/api/courses/teacher/my-courses');
       setCourses(response.data);
@@ -36,7 +36,7 @@ const TeacherDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const fetchEnrolledStudents = async () => {
     try {

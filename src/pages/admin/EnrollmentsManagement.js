@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -27,7 +27,7 @@ import {
   DialogContent,
   DialogActions,
   CircularProgress,
-  Alert,
+  // Alert,
   Card,
   CardContent,
   Grid
@@ -47,7 +47,7 @@ import {
 const EnrollmentsManagement = () => {
   const [enrollments, setEnrollments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  // const [error, setError] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
@@ -58,11 +58,14 @@ const EnrollmentsManagement = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchEnrollments();
-    fetchStats();
-  }, [page, rowsPerPage, searchTerm, filterStatus]);
+    const loadData = async () => {
+      await fetchEnrollments();
+      await fetchStats();
+    };
+    loadData();
+  }, [page, rowsPerPage, searchTerm, filterStatus, fetchEnrollments, fetchStats]);
 
-  const fetchEnrollments = async () => {
+  const fetchEnrollments = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -92,9 +95,9 @@ const EnrollmentsManagement = () => {
         navigate('/admin');
       }
     }
-  };
+  }, [page, rowsPerPage, searchTerm, filterStatus, navigate]);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get('/api/admin/enrollment-stats', {
@@ -104,7 +107,7 @@ const EnrollmentsManagement = () => {
     } catch (error) {
       console.error('Error fetching stats:', error);
     }
-  };
+  }, []);
 
   const handleDeleteEnrollment = async (enrollmentId) => {
     if (!window.confirm('هل أنت متأكد من حذف هذا التسجيل؟')) {

@@ -46,7 +46,10 @@ const StudentStats = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchStudentData();
+    const loadData = async () => {
+      await fetchStudentData();
+    };
+    loadData();
   }, [fetchStudentData]);
 
   const fetchStudentData = useCallback(async () => {

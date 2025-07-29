@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -47,8 +47,11 @@ const QuizPage = () => {
   const [timeLeft, setTimeLeft] = useState(null);
 
   useEffect(() => {
-    fetchQuiz();
-  }, [id]);
+    const loadQuiz = async () => {
+      await fetchQuiz();
+    };
+    loadQuiz();
+  }, [id, fetchQuiz]);
 
   useEffect(() => {
     if (timeLeft !== null && timeLeft > 0) {
@@ -57,11 +60,14 @@ const QuizPage = () => {
       }, 1000);
       return () => clearTimeout(timer);
     } else if (timeLeft === 0) {
-      handleSubmit();
+      const submitQuiz = async () => {
+        await handleSubmit();
+      };
+      submitQuiz();
     }
-  }, [timeLeft]);
+  }, [timeLeft, handleSubmit]);
 
-  const fetchQuiz = async () => {
+  const fetchQuiz = useCallback(async () => {
     try {
       const response = await axios.get(`/api/quizzes/${id}`);
       const quizData = response.data.quiz;
@@ -85,7 +91,7 @@ const QuizPage = () => {
       setError('فشل في تحميل الاختبار');
       setLoading(false);
     }
-  };
+  }, [id]);
 
   const handleAnswerSelect = (questionId, answerIndex) => {
     setSelectedAnswers(prev => ({
@@ -106,7 +112,7 @@ const QuizPage = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (Object.keys(selectedAnswers).length < quiz.questions.length) {
       toast.warning('يرجى الإجابة على جميع الأسئلة قبل التقديم');
       return;
@@ -139,7 +145,7 @@ const QuizPage = () => {
     } finally {
       setSubmitting(false);
     }
-  };
+  }, [id, selectedAnswers, quiz, timeLeft]);
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);

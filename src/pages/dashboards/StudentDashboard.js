@@ -47,7 +47,7 @@ const StudentDashboard = () => {
     console.log('StudentDashboard mounted, user:', user);
     console.log('Student ID:', studentId);
     fetchData();
-  }, []);
+  }, [studentId, user]);
 
   const fetchData = async () => {
     try {

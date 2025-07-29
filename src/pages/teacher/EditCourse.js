@@ -48,7 +48,10 @@ const EditCourse = () => {
   });
 
   useEffect(() => {
-    fetchCourseData();
+    const loadData = async () => {
+      await fetchCourseData();
+    };
+    loadData();
   }, [id, fetchCourseData]);
 
   const fetchCourseData = useCallback(async () => {

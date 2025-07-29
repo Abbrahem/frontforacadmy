@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
@@ -23,7 +23,7 @@ const Register = () => {
   const [step, setStep] = useState(1);
   const [role, setRole] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  // const [error, setError] = useState('');
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -111,7 +111,7 @@ const Register = () => {
     setStep(2);
   };
 
-  const verifyStudent = async () => {
+  const verifyStudent = useCallback(async () => {
     if (!formData.childStudentId) return;
     
     try {
@@ -124,14 +124,14 @@ const Register = () => {
     } catch (error) {
       setStudentVerification(null);
     }
-  };
+  }, [formData.childStudentId]);
 
   useEffect(() => {
     if (role === 'parent' && formData.childStudentId) {
       const debounceTimer = setTimeout(verifyStudent, 500);
       return () => clearTimeout(debounceTimer);
     }
-  }, [formData.childStudentId, role]);
+  }, [formData.childStudentId, role, verifyStudent]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -215,11 +215,11 @@ const Register = () => {
     'الأول الثانوي', 'الثاني الثانوي', 'الثالث الثانوي'
   ];
 
-  const subjects = [
-    'اللغة العربية', 'الرياضيات', 'التاريخ', 'الجغرافيا', 'العلوم', 
-    'الكيمياء', 'الفيزياء', 'الأحياء', 'الفلسفة', 'الفرنساوي', 
-    'التربية الدينية', 'الإنجليزية', 'جيولوجيا'
-  ];
+  // const subjects = [
+  //   'اللغة العربية', 'الرياضيات', 'التاريخ', 'الجغرافيا', 'العلوم', 
+  //   'الكيمياء', 'الفيزياء', 'الأحياء', 'الفلسفة', 'الفرنساوي', 
+  //   'التربية الدينية', 'الإنجليزية', 'جيولوجيا'
+  // ];
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
